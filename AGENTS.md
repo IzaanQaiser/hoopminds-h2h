@@ -110,8 +110,10 @@ Use server-side API routes or server actions for database writes. Do not put ser
 Read these docs before making product or architecture decisions:
 
 ```txt
-docs/H2H_PRODUCT_CONTEXT.md
-docs/H2H_BUILD_PLAN.md
+docs/h2h-product-context.md
+docs/h2h-build-plan.md
+docs/h2h-game-feel-and-live-ux.md
+docs/h2h-reputation-system.md
 ```
 
 If a request conflicts with these docs, ask for clarification before changing product direction.
@@ -130,6 +132,7 @@ When implementing:
 8. Do not add payment, prizes, betting, odds, or gambling mechanics.
 9. Do not over-engineer group/friend leaderboards for MVP.
 10. Add manual admin result entry before attempting full automated API resolution.
+11. Game feel matters. `/h2h` must feel alive before, during, and after the game. Do not build the page as a static form only. Use live UX states from `docs/h2h-game-feel-and-live-ux.md`.
 
 ## Current MVP Data Strategy
 
@@ -227,7 +230,7 @@ Use Supabase tables for:
 * predictions
 * results
 
-Keep schema simple. See `docs/H2H_BUILD_PLAN.md`.
+Keep schema simple. See `docs/h2h-build-plan.md`.
 
 ## Game 1 Context
 

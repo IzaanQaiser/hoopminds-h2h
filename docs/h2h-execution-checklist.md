@@ -22,6 +22,7 @@ Checklist:
 - [ ] Scaffold all H2H API endpoints with payload validation shells
 - [ ] Standardize API success/error response structure
 - [ ] Wire placeholder UI states for open/locked/submitted/final
+- [ ] Wire placeholder UI states for open/submitted/live/finalizing/final
 - [ ] Add admin password gate scaffold
 - [ ] Set up lint, typecheck, and baseline tests
 - [ ] Verify no service role key appears in client code
@@ -39,6 +40,7 @@ Reference:
 
 1. `docs/h2h-phase-2-h2h-game-delivery-plan.md`
 2. `docs/h2h-reputation-system.md`
+3. `docs/h2h-game-feel-and-live-ux.md`
 
 Checklist:
 
@@ -49,7 +51,13 @@ Checklist:
 - [ ] Add user upsert by anonymous ID and duplicate prevention
 - [ ] Implement already-submitted state on `/h2h`
 - [ ] Implement locked state UI and backend enforcement
+- [ ] Implement game-feel state engine (`OPEN`, `SUBMITTED`, `LIVE`, `FINALIZING`, `FINAL`)
+- [ ] Implement countdown urgency states (`>1h`, `<1h`, `<5m`, locked)
+- [ ] Build live race progress cards (`current / threshold`, status badge, user call marker)
+- [ ] Support live-race status labels (`NOT_STARTED`, `LIVE`, `SWEATING`, `ONE_AWAY`, `COMPLETED`, `NEITHER_PENDING`, `VOID`)
+- [ ] Build finalizing-state messaging before official results are published
 - [ ] Build `/admin/h2h` race result editor (`PLAYER_A/B/NEITHER/VOID`)
+- [ ] Add manual admin controls for live progress values (MVP fallback to no automation)
 - [ ] Implement finalize-game scoring write to `h2h_game_results`
 - [ ] Mark game final only after finalize succeeds
 - [ ] Build `/h2h/results` score + breakdown view
@@ -59,6 +67,8 @@ Checklist:
 - [ ] Build `/h2h/leaderboard` aggregation + sorting
 - [ ] Add required no-betting disclaimer copy
 - [ ] Run copy audit to remove prohibited gambling terms
+- [ ] Implement loading/skeleton/empty/error states from game-feel spec
+- [ ] Implement share CTA and share-copy surfaces in submitted/postgame states
 - [ ] Validate mobile-first behavior across required pages
 
 Phase 2 gate:
@@ -66,6 +76,7 @@ Phase 2 gate:
 - [ ] User can submit complete picks before lock
 - [ ] Backend rejects late, malformed, and duplicate submissions
 - [ ] Admin can resolve and finalize game
+- [ ] `/h2h` state transitions are clear and correct across open/live/finalizing/final
 - [ ] Results display is correct post-finalize
 - [ ] Reputation metrics display correctly post-finalize
 - [ ] Leaderboard rank order is correct and stable

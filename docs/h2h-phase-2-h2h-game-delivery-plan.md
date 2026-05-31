@@ -18,6 +18,7 @@ Implement the complete MVP gameplay loop described in `AGENTS.md`, `docs/h2h-pro
 6. global leaderboard updates correctly
 
 Use `docs/h2h-reputation-system.md` for metric definitions, thresholds, and status-copy rules.
+Use `docs/h2h-game-feel-and-live-ux.md` for pregame/live/finalizing/postgame state UX rules.
 
 ## Non-Negotiable Product Rules
 
@@ -73,7 +74,25 @@ Defer post-MVP:
 2. UI shows locked status and disabled controls
 3. backend rejects any direct submit attempts
 
-## Flow C: Postgame Results
+## Flow C: Submitted / Waiting for Tipoff
+
+1. user submits picks before lock
+2. app confirms picks are saved
+3. app shows user calls, share CTA, and return-live prompt
+
+## Flow D: Live Race Sweating
+
+1. game status moves live
+2. app shows race progress and status badges
+3. user sees score-so-far context and whether calls are alive
+
+## Flow E: Finalizing
+
+1. game ends
+2. app shows finalizing state while results are verified
+3. app withholds official score until finalize is complete
+
+## Flow F: Postgame Results
 
 1. admin sets race results
 2. admin finalizes game
@@ -81,7 +100,7 @@ Defer post-MVP:
 4. user sees score + race-by-race correctness
 5. user sees series record + rank context + title + best receipt
 
-## Flow D: Leaderboard
+## Flow G: Leaderboard
 
 1. user opens `/h2h/leaderboard`
 2. app shows global rank table across finalized games
@@ -111,6 +130,30 @@ Acceptance criteria:
 1. user cannot submit until all five races are answered
 2. user cannot submit without valid display name
 3. mobile layout is clear and tappable
+
+## Track 1B: Game Feel State Engine and Live UX
+
+Implement state-specific UI behavior from `docs/h2h-game-feel-and-live-ux.md`:
+
+1. `OPEN`: pregame form with countdown urgency states
+2. `SUBMITTED`: locked picks confirmation + share CTA
+3. `LIVE`: progress bars, race statuses, user-call markers, score-so-far
+4. `FINALIZING`: explicit "results being checked" state
+5. `FINAL`: postgame score + reputation handoff
+
+Live race UX requirements:
+
+1. show `current / threshold` for both players
+2. show race status badge (`NOT_STARTED`, `LIVE`, `SWEATING`, `ONE_AWAY`, `COMPLETED`, `NEITHER_PENDING`, `VOID`)
+3. show current edge and user call status
+4. show `Updating...` when live data is delayed
+5. never render fake progress
+
+Acceptance criteria:
+
+1. `/h2h` no longer behaves as static form-only after submission
+2. every game status maps to a clear UX state
+3. live progress cards support manual updates for MVP
 
 ## Track 2: Prediction Submission API
 
@@ -282,6 +325,21 @@ Acceptance criteria:
 1. no prohibited terms in user-facing UI
 2. required disclaimer visible on core pages
 
+## Track 7B: Loading, Error, and Accessibility UX
+
+Implement required states from `docs/h2h-game-feel-and-live-ux.md`:
+
+1. loading skeletons and loading copy for `/h2h`, `/h2h/results`, `/h2h/leaderboard`
+2. submit errors, locked errors, duplicate-submit errors, and results-not-ready errors
+3. empty leaderboard state
+4. keyboard-accessible race option buttons
+5. selected-state indicators not based on color alone
+
+Acceptance criteria:
+
+1. every primary route has explicit loading and error handling UI
+2. accessibility requirements are met for race selection controls
+
 ## Track 8: Robustness and Edge Cases
 
 Validate:
@@ -295,6 +353,10 @@ Validate:
 7. percentile threshold boundary (`N = 24` vs `N = 25`)
 8. provisional title threshold boundary (`valid picks = 9` vs `10`)
 9. perfect-card edge case with `VOID` races
+10. submitted state after refresh (same browser anonymous ID)
+11. live status transition boundaries (`LIVE` -> `FINALIZING` -> `FINAL`)
+12. delayed live data messaging (`Updating...`)
+13. countdown presentation boundary states (`>1h`, `<1h`, `<5m`, locked)
 
 Acceptance criteria:
 
@@ -308,8 +370,9 @@ Phase 2 is complete only when all statements are true:
 1. user can submit five race picks before lock on `/h2h`
 2. backend enforces lock and duplicate protections
 3. admin can set race results and finalize game
-4. `/h2h/results` shows correct score breakdown
-5. `/h2h/results` shows reputation card metrics correctly
-6. `/h2h/leaderboard` aggregates and sorts correctly
-7. all UI copy remains non-gambling
-8. MVP works on mobile and desktop
+4. `/h2h` supports open/submitted/live/finalizing/final UX states
+5. `/h2h/results` shows correct score breakdown
+6. `/h2h/results` shows reputation card metrics correctly
+7. `/h2h/leaderboard` aggregates and sorts correctly
+8. all UI copy remains non-gambling
+9. MVP works on mobile and desktop

@@ -46,6 +46,21 @@ Use these documents together with this build plan:
 3. `docs/h2h-mock-stream-and-test-data-plan.md`
 4. `docs/h2h-execution-checklist.md`
 5. `docs/h2h-reputation-system.md`
+6. `docs/h2h-game-feel-and-live-ux.md`
+
+## Game Feel Requirement
+
+`/h2h` must not be implemented as a static form-only page.
+
+The page must support clear state-based UX across:
+
+1. pregame open
+2. submitted/waiting
+3. locked/live
+4. finalizing
+5. postgame results
+
+See `docs/h2h-game-feel-and-live-ux.md` for full behavior and copy requirements.
 
 ## Recommended Stack
 
@@ -92,6 +107,8 @@ components/
     H2HGamePage.tsx
     MatchupHeader.tsx
     RaceCard.tsx
+    LiveRaceCard.tsx
+    RaceStatusBadge.tsx
     PredictionForm.tsx
     LockedPicks.tsx
     ResultsSummary.tsx
@@ -226,6 +243,22 @@ create table h2h_game_results (
 For MVP, do not create separate group or social graph tables.
 
 Reputation metrics should be derived from `h2h_predictions`, `h2h_races`, and `h2h_game_results` queries.
+
+## Live Progress Storage (MVP-Compatible)
+
+To support live-feel race cards without blocking launch on external APIs, add a simple progress storage approach.
+
+Recommended fields (either on `h2h_races` or a small companion progress table):
+
+1. `player_a_current numeric default 0`
+2. `player_b_current numeric default 0`
+3. `live_status text` (`NOT_STARTED`, `LIVE`, `SWEATING`, `ONE_AWAY`, `COMPLETED`, `NEITHER_PENDING`, `VOID`)
+4. `last_progress_at timestamptz`
+5. `progress_note text`
+
+MVP data source can be manual admin entry.
+
+Later, these values can be updated by automated play-by-play ingestion.
 
 ## Required Enums As TypeScript Types
 
@@ -555,6 +588,18 @@ Handles:
 * validation errors
 * disabled state after lock
 
+### LiveRaceCard
+
+Shows:
+
+* race number
+* player A progress (`current / threshold`)
+* player B progress (`current / threshold`)
+* user call marker
+* current leader
+* race status badge
+* completed result when resolved
+
 ### ResultsSummary
 
 Shows:
@@ -606,6 +651,18 @@ After lock time.
 
 No submissions accepted.
 
+### Live
+
+During game.
+
+Show live progress cards and user score-so-far context.
+
+### Finalizing
+
+Game ended; results being verified.
+
+Do not show final score until race results are complete.
+
 ### Final
 
 Results visible.
@@ -652,6 +709,17 @@ Footer disclaimer:
 ```txt
 HoopMinds H2H is a free basketball prediction challenge. No betting, no odds, no paid entry, and no cash prizes.
 ```
+
+## UX Quality Requirements
+
+Implement the quality baseline from `docs/h2h-game-feel-and-live-ux.md`:
+
+1. loading skeletons on game/race/leaderboard/results fetch
+2. clear empty states (including empty leaderboard)
+3. clear submit/lock/duplicate/results-not-ready errors
+4. subtle animation only for select, submit success, race completion, and result reveal
+5. strong mobile readability and tap targets
+6. no fake live progress when data is delayed
 
 ## Build Order
 
@@ -701,21 +769,24 @@ Implement reputation card, percentile gating, and title tiers.
 
 ### Step 12
 
-Polish mobile UI and copy.
+Implement live state UI (progress cards, status badges, finalizing state, live microcopy).
+
+### Step 13
+
+Polish mobile UI, loading/skeleton states, and error/empty states.
 
 ## MVP Cut List
 
 If time is short, cut:
 
 1. player headshots
-2. live progress
-3. share image cards
-4. friends leaderboard
-5. regional leaderboard
-6. automated NBA API fetching
-7. group leaderboard
-8. casual-of-the-night group callouts
-9. advanced streak system
+2. share image cards
+3. friends leaderboard
+4. regional leaderboard
+5. automated NBA API fetching
+6. group leaderboard
+7. casual-of-the-night group callouts
+8. advanced streak system
 
 Do not cut:
 
@@ -730,6 +801,8 @@ Do not cut:
 9. rank context
 10. title tier
 11. perfect card badge
+12. live progress cards (manual admin-fed is acceptable for MVP)
+13. submitted/live/finalizing/postgame state UX
 
 ## Done Checklist
 

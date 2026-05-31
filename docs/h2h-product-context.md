@@ -88,6 +88,26 @@ The product should frame outcomes as status:
 You are 17/20 this Finals. Top 2%.
 ```
 
+## Game Feel Requirement
+
+`/h2h` must feel alive before, during, and after the game.
+
+It cannot behave as a static pregame form only.
+
+State model:
+
+1. Pregame Open
+2. Submitted / Waiting for Tipoff
+3. Locked / Game Live
+4. Game Finalizing
+5. Postgame Results
+
+Reference:
+
+```txt
+docs/h2h-game-feel-and-live-ux.md
+```
+
 ## What This Is Not
 
 This is not:
@@ -487,5 +507,6 @@ MVP is successful if:
 * user sees a reputation card after finalize
 * rank and low-volume percentile logic work correctly
 * perfect card and title logic are correct
+* `/h2h` supports pregame, submitted, live, finalizing, and postgame UX states
 * user can understand the game in under 10 seconds
 * no subjective stat tracking is required

@@ -48,6 +48,19 @@ Defer these:
 5. top-10% streaks
 6. series champion title
 
+## Mechanic Coverage Matrix
+
+This maps the incentive mechanics to delivery phase so nothing is ambiguous.
+
+1. Permanent series record: `P0`
+2. Percentile ranking: `P0` with low-volume guardrail
+3. Accuracy titles: `P0` with provisional threshold
+4. Friend-group shame labels (`Casual of the Night`): `P1+`
+5. Receipts for correct calls: `P0`
+6. Rare-call labels (`Sharp Call`, `Public Call`, `Contrarian Miss`): `P0`
+7. Perfect Card badge: `P0`
+8. Streaks (`games played`, `correct-call`, `perfect-card`, `top-10%`, `group wins`): `P1+`
+
 ## MVP Reputation Card
 
 Show on `/h2h/results`:
@@ -193,4 +206,3 @@ No friend/group tables are required for MVP reputation.
 3. provisional title appears under valid-pick threshold
 4. perfect card appears only on valid 5/5
 5. best receipt uses lowest pick-rate correct call
-

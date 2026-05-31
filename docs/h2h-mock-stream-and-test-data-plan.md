@@ -11,6 +11,7 @@ This supports faster iteration on:
 3. UI state transitions
 4. leaderboard math
 5. reputation math (rank, percentile, title, receipt)
+6. live-state transition behavior
 
 ## Important Constraint
 
@@ -135,6 +136,9 @@ Minimum scenarios:
 13. sample-size boundary test (`N = 24` vs `N = 25`) for percentile label
 14. title provisional boundary test (`valid picks = 9` vs `10`)
 15. best receipt picks lowest pick-rate correct call
+16. live statuses progress through `LIVE` -> `SWEATING` -> `ONE_AWAY` -> `COMPLETED`
+17. game-level transition `LIVE` -> `FINALIZING` -> `FINAL`
+18. delayed data state displays `Updating...` messaging
 
 ## QA Verification Workflow
 
@@ -146,6 +150,7 @@ Minimum scenarios:
 6. compare persisted `h2h_game_results` against expected fixture
 7. validate leaderboard ordering against expected ranking fixture
 8. validate reputation output (title, rank, percentile gate, best receipt, perfect badge)
+9. validate live-state transitions and status labels against expected sequence
 
 ## Determinism Rules
 
@@ -161,3 +166,4 @@ Minimum scenarios:
 3. expected user scores match finalized DB results
 4. leaderboard sort is verified with fixture-based assertions
 5. reputation output matches expected fixture-based assertions
+6. live-state outputs match expected fixture-based assertions

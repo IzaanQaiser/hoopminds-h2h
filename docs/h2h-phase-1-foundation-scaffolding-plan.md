@@ -45,6 +45,7 @@ By the end of this phase, the app should be structurally complete and ready for 
 4. Deterministic seed script for Game 1.
 5. Shared H2H types, copy constants, and utility modules.
 6. Baseline tests (lint + typecheck + API smoke tests).
+7. Game-feel scaffolding hooks for `OPEN`, `SUBMITTED`, `LIVE`, `FINALIZING`, `FINAL`.
 
 ## Detailed Workstreams
 
@@ -206,6 +207,8 @@ Build shell components with mobile-first layout and dark mode baseline:
 6. reputation card shell
 7. leaderboard table shell
 8. admin race result shell
+9. live race progress shell
+10. finalizing state shell
 
 Add navigation links:
 
