@@ -10,6 +10,7 @@ This supports faster iteration on:
 2. scoring correctness
 3. UI state transitions
 4. leaderboard math
+5. reputation math (rank, percentile, title, receipt)
 
 ## Important Constraint
 
@@ -66,6 +67,7 @@ File suggestions:
 ```txt
 data/mock/h2h-game1-expected-race-results.json
 data/mock/h2h-game1-expected-user-scores.json
+data/mock/h2h-game1-expected-reputation.json
 ```
 
 ## Mock Replay Utility
@@ -128,6 +130,11 @@ Minimum scenarios:
 8. lock-time rejection scenario
 9. duplicate submission rejection scenario
 10. all races voided results in `valid_race_count = 0`
+11. valid 5/5 user receives perfect-card flag
+12. low sample-size leaderboard hides percentile label
+13. sample-size boundary test (`N = 24` vs `N = 25`) for percentile label
+14. title provisional boundary test (`valid picks = 9` vs `10`)
+15. best receipt picks lowest pick-rate correct call
 
 ## QA Verification Workflow
 
@@ -138,6 +145,7 @@ Minimum scenarios:
 5. finalize game
 6. compare persisted `h2h_game_results` against expected fixture
 7. validate leaderboard ordering against expected ranking fixture
+8. validate reputation output (title, rank, percentile gate, best receipt, perfect badge)
 
 ## Determinism Rules
 
@@ -152,4 +160,4 @@ Minimum scenarios:
 2. expected race outcomes match admin-entered outcomes in QA tests
 3. expected user scores match finalized DB results
 4. leaderboard sort is verified with fixture-based assertions
-
+5. reputation output matches expected fixture-based assertions

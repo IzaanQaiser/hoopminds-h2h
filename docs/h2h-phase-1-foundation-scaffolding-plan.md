@@ -72,11 +72,14 @@ components/h2h/
   PredictionForm.tsx
   LockedPicks.tsx
   ResultsSummary.tsx
+  ReputationCard.tsx
   LeaderboardTable.tsx
   AdminRaceResultForm.tsx
 lib/h2h/
   types.ts
   scoring.ts
+  reputation.ts
+  receipts.ts
   anonymousUser.ts
   copy.ts
   statLabels.ts
@@ -161,6 +164,8 @@ Implement utility modules:
 2. `statLabels.ts` for stable display text
 3. `copy.ts` for centralized approved copy
 4. `scoring.ts` placeholder signature (full logic in Phase 2)
+5. `reputation.ts` placeholder signatures for rank/percentile/title logic
+6. `receipts.ts` placeholder signatures for rare-call/receipt logic
 
 Acceptance criteria:
 
@@ -198,8 +203,9 @@ Build shell components with mobile-first layout and dark mode baseline:
 3. prediction form shell
 4. locked picks shell
 5. results summary shell
-6. leaderboard table shell
-7. admin race result shell
+6. reputation card shell
+7. leaderboard table shell
+8. admin race result shell
 
 Add navigation links:
 
@@ -245,4 +251,3 @@ Phase 1 is complete only when all statements are true:
 4. Shared types/utilities are in place and used.
 5. Baseline tests pass.
 6. Codebase is ready for full gameplay implementation in Phase 2.
-

@@ -10,6 +10,33 @@ Build the HoopMinds H2H MVP at:
 
 The MVP should support one active NBA Finals game with five head-to-head player races, anonymous prediction submission, manual result entry, results calculation, and a global leaderboard.
 
+## Reputation System Scope (MVP v1)
+
+MVP includes a lightweight reputation layer designed for low initial user volume and no friend-group signup dependency.
+
+Ship in MVP:
+
+1. Permanent series record (`total_correct / total_valid`).
+2. Global rank context (`Rank X / N`).
+3. Percentile label when sample size is meaningful.
+4. Accuracy-based title tier.
+5. Best receipt call per user per game.
+6. Perfect Card badge for 5/5.
+
+Defer post-MVP:
+
+1. Group invites and group-only leaderboards.
+2. `Casual of the Night` group label.
+3. Group wins.
+4. Top-10% streak tracking.
+5. Series champion title logic.
+
+Low-volume guardrails:
+
+1. Always show rank.
+2. Show percentile only when participant count threshold is met (recommended `N >= 25`).
+3. Show provisional title until user has enough attempts (recommended `>= 10 valid picks`).
+
 ## Companion Planning Docs
 
 Use these documents together with this build plan:
@@ -18,6 +45,7 @@ Use these documents together with this build plan:
 2. `docs/h2h-phase-2-h2h-game-delivery-plan.md`
 3. `docs/h2h-mock-stream-and-test-data-plan.md`
 4. `docs/h2h-execution-checklist.md`
+5. `docs/h2h-reputation-system.md`
 
 ## Recommended Stack
 
@@ -67,6 +95,7 @@ components/
     PredictionForm.tsx
     LockedPicks.tsx
     ResultsSummary.tsx
+    ReputationCard.tsx
     LeaderboardTable.tsx
     AdminRaceResultForm.tsx
 
@@ -77,6 +106,8 @@ lib/
   h2h/
     types.ts
     scoring.ts
+    reputation.ts
+    receipts.ts
     anonymousUser.ts
     copy.ts
     statLabels.ts
@@ -191,6 +222,10 @@ create table h2h_game_results (
   unique(game_id, user_id)
 );
 ```
+
+For MVP, do not create separate group or social graph tables.
+
+Reputation metrics should be derived from `h2h_predictions`, `h2h_races`, and `h2h_game_results` queries.
 
 ## Required Enums As TypeScript Types
 
@@ -359,6 +394,73 @@ correct = predictions.filter(prediction => {
 accuracy = validRaces.length === 0 ? 0 : correct / validRaces.length
 ```
 
+## Reputation Calculation (MVP v1)
+
+Use simple deterministic formulas.
+
+Series record:
+
+```txt
+series_correct = sum(correct_count across finalized games)
+series_valid = sum(valid_race_count across finalized games)
+series_accuracy = series_valid === 0 ? 0 : series_correct / series_valid
+```
+
+Global rank:
+
+```txt
+rank users by:
+1) series_correct desc
+2) series_accuracy desc
+3) series_valid desc
+4) earliest first submission asc
+```
+
+Percentile:
+
+```txt
+percentile = (users_below / total_users) * 100
+display as "Top X%"
+```
+
+Low-volume display rule:
+
+```txt
+if total_users < 25:
+  hide percentile label and show rank only
+```
+
+Title tiers:
+
+```txt
+90–100%: Court Vision Demon
+80–89%: Certified Hooper
+70–79%: Knows Ball
+60–69%: Solid Casual
+50–59%: Agenda Merchant
+Below 50%: Box Score Goblin
+```
+
+Title confidence rule:
+
+```txt
+if series_valid < 10:
+  mark title as provisional
+```
+
+Best receipt per game:
+
+1. Consider user picks that were correct.
+2. Compute global pick-rate for each race/choice.
+3. Choose the correct pick with the lowest pick-rate.
+4. If user had zero correct picks, no receipt is shown.
+
+Perfect Card:
+
+```txt
+is_perfect_card = (correct_count === 5 && valid_race_count === 5)
+```
+
 ## Leaderboard Query
 
 Global leaderboard should aggregate across all finalized games.
@@ -381,6 +483,12 @@ accuracy desc
 valid_total desc
 earliest_submission asc
 ```
+
+MVP leaderboard output should additionally support:
+
+1. rank position
+2. optional percentile label when threshold is met
+3. perfect card count (optional column, can be added after base table is stable)
 
 ## Admin MVP
 
@@ -454,7 +562,21 @@ Shows:
 * score
 * accuracy
 * race-by-race breakdown
+* reputation summary CTA
 * leaderboard CTA
+
+### ReputationCard
+
+Shows:
+
+* display name
+* game score
+* series record
+* global rank
+* percentile (if enabled by threshold)
+* title (and provisional state if low sample)
+* best receipt line
+* perfect card badge when eligible
 
 ### LeaderboardTable
 
@@ -521,6 +643,8 @@ Postgame:
 ```txt
 You went 4/5.
 Series accuracy: 80%.
+Top 12% tonight.
+Title: Certified Hooper.
 ```
 
 Footer disclaimer:
@@ -573,6 +697,10 @@ Build `/h2h/leaderboard`.
 
 ### Step 11
 
+Implement reputation card, percentile gating, and title tiers.
+
+### Step 12
+
 Polish mobile UI and copy.
 
 ## MVP Cut List
@@ -585,6 +713,9 @@ If time is short, cut:
 4. friends leaderboard
 5. regional leaderboard
 6. automated NBA API fetching
+7. group leaderboard
+8. casual-of-the-night group callouts
+9. advanced streak system
 
 Do not cut:
 
@@ -595,6 +726,10 @@ Do not cut:
 5. admin result entry
 6. results calculation
 7. leaderboard
+8. series record
+9. rank context
+10. title tier
+11. perfect card badge
 
 ## Done Checklist
 
@@ -609,5 +744,9 @@ Do not cut:
 * admin can set race results
 * final scores calculate correctly
 * leaderboard aggregates scores correctly
+* results page shows reputation card
+* percentile displays only when user count threshold is met
+* title tier logic works with provisional threshold
+* perfect card badge appears only on valid 5/5
 * UI has no gambling language
 * footer disclaimer exists

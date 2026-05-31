@@ -14,7 +14,10 @@ Implement the complete MVP gameplay loop described in `AGENTS.md`, `docs/h2h-pro
 2. backend stores predictions safely
 3. admin enters and finalizes race results
 4. user sees score and breakdown
-5. global leaderboard updates correctly
+5. user sees reputation card and credibility context
+6. global leaderboard updates correctly
+
+Use `docs/h2h-reputation-system.md` for metric definitions, thresholds, and status-copy rules.
 
 ## Non-Negotiable Product Rules
 
@@ -24,6 +27,26 @@ Implement the complete MVP gameplay loop described in `AGENTS.md`, `docs/h2h-pro
 4. Admin race results allow `PLAYER_A`, `PLAYER_B`, `NEITHER`, `VOID`.
 5. Backend lock check is source of truth.
 6. No account system required for MVP.
+
+## MVP Realism Constraints
+
+Assume low initial user volume and no friend-group onboarding dependency.
+
+Scope in MVP:
+
+1. global reputation signals
+2. series record
+3. rank and conditional percentile
+4. title tiers
+5. best receipt and perfect card badge
+
+Defer post-MVP:
+
+1. group invites
+2. group-only leaderboards
+3. `Casual of the Night` labels
+4. group wins
+5. long streak systems
 
 ## Required Routes in This Phase
 
@@ -56,6 +79,7 @@ Implement the complete MVP gameplay loop described in `AGENTS.md`, `docs/h2h-pro
 2. admin finalizes game
 3. user opens `/h2h/results`
 4. user sees score + race-by-race correctness
+5. user sees series record + rank context + title + best receipt
 
 ## Flow D: Leaderboard
 
@@ -156,7 +180,8 @@ Page requirements (`/h2h/results`):
 2. show game score (correct/valid)
 3. show series accuracy
 4. show race-by-race result and user pick
-5. link to leaderboard
+5. show reputation card fields
+6. link to leaderboard
 
 Acceptance criteria:
 
@@ -164,13 +189,46 @@ Acceptance criteria:
 2. handles no-result-yet state gracefully
 3. works for users who submitted and users who did not submit
 
-## Track 5: Leaderboard Page
+## Track 5: Reputation System (MVP v1)
+
+Compute and show:
+
+1. game score
+2. series record
+3. series accuracy
+4. global rank (`Rank X / N`)
+5. global percentile label (`Top Y%`) when sample threshold is met
+6. title tier from accuracy
+7. provisional title state when sample is too small
+8. best receipt from correct calls
+9. perfect card badge for valid 5/5
+
+Rules:
+
+1. always show rank
+2. only show percentile when total participants threshold is met (recommended `N >= 25`)
+3. only show non-provisional title when user has enough sample (recommended `>= 10 valid picks`)
+4. best receipt picks the user’s correct call with lowest global pick-rate
+5. if user had zero correct calls, hide best receipt module
+
+Acceptance criteria:
+
+1. reputation card values match DB aggregates
+2. low-volume percentile guardrail works
+3. provisional title guardrail works
+4. perfect badge appears only on valid 5/5
+
+## Track 6: Leaderboard Page
 
 Query requirements:
 
 1. aggregate across finalized games
 2. fields: `display_name`, `correct_total`, `valid_total`, `accuracy`, `games_played`
-3. sort order:
+3. additional optional fields for reputation framing:
+   1. `rank`
+   2. `percentile_label`
+   3. `perfect_cards`
+4. sort order:
    1. `correct_total desc`
    2. `accuracy desc`
    3. `valid_total desc`
@@ -184,13 +242,14 @@ UI requirements:
 4. total predictions
 5. accuracy percentage
 6. games played
+7. optional status marker (`Perfect Card xN`)
 
 Acceptance criteria:
 
 1. ranking is stable and deterministic
 2. empty state handled for no finalized games
 
-## Track 6: Copy and Compliance Pass
+## Track 7: Copy and Compliance Pass
 
 Confirm app copy includes:
 
@@ -198,6 +257,7 @@ Confirm app copy includes:
 2. “Who gets there first?”
 3. “Series accuracy”
 4. “Leaderboard”
+5. “Build your Finals ball-knowledge record”
 
 Confirm app copy excludes:
 
@@ -222,7 +282,7 @@ Acceptance criteria:
 1. no prohibited terms in user-facing UI
 2. required disclaimer visible on core pages
 
-## Track 7: Robustness and Edge Cases
+## Track 8: Robustness and Edge Cases
 
 Validate:
 
@@ -232,6 +292,9 @@ Validate:
 4. finalize with all races `VOID`
 5. finalize with some races unresolved (`null`)
 6. unknown anonymous ID on results page
+7. percentile threshold boundary (`N = 24` vs `N = 25`)
+8. provisional title threshold boundary (`valid picks = 9` vs `10`)
+9. perfect-card edge case with `VOID` races
 
 Acceptance criteria:
 
@@ -246,7 +309,7 @@ Phase 2 is complete only when all statements are true:
 2. backend enforces lock and duplicate protections
 3. admin can set race results and finalize game
 4. `/h2h/results` shows correct score breakdown
-5. `/h2h/leaderboard` aggregates and sorts correctly
-6. all UI copy remains non-gambling
-7. MVP works on mobile and desktop
-
+5. `/h2h/results` shows reputation card metrics correctly
+6. `/h2h/leaderboard` aggregates and sorts correctly
+7. all UI copy remains non-gambling
+8. MVP works on mobile and desktop

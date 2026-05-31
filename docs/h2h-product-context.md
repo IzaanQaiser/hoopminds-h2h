@@ -72,6 +72,22 @@ The product should create this loop:
 make calls → watch races unfold → check result → compare with friends → return next game
 ```
 
+## Core Incentive
+
+The primary incentive is reputation, not just correctness.
+
+The emotional hook should be:
+
+```txt
+Your Finals H2H record becomes your public basketball credibility.
+```
+
+The product should frame outcomes as status:
+
+```txt
+You are 17/20 this Finals. Top 2%.
+```
+
 ## What This Is Not
 
 This is not:
@@ -137,7 +153,83 @@ As an NBA fan, I want to quickly predict five head-to-head player races before t
 2. User visits results page.
 3. User sees score.
 4. User sees correct and incorrect calls.
-5. User sees leaderboard rank.
+5. User sees reputation card (series record + rank context).
+6. User sees leaderboard rank.
+
+## Reputation System (MVP v1)
+
+MVP should ship a lightweight reputation system that works even with low user volume and no group onboarding.
+
+MVP reputation card fields:
+
+```txt
+Game Score: 4/5
+Series Record: 12/15
+Accuracy: 80%
+Global Rank: 14/220
+Global Percentile: Top 12% (when sample size is large enough)
+Title: Certified Hooper
+Best Receipt: Wemby 3 blocks before Brunson 30
+```
+
+MVP status mechanics:
+
+1. Permanent series record by display name + anonymous ID.
+2. Global rank on each game and across series.
+3. Percentile framing when sample size is meaningful.
+4. Accuracy title tier.
+5. Best receipt highlight from correct calls.
+6. Perfect Card badge for 5/5 games.
+
+MVP low-volume guardrails:
+
+1. Always show rank as `Rank X / N`.
+2. Show percentile only when participant count meets threshold (recommended: `N >= 25`).
+3. If below threshold, show rank-only language instead of over-precise percentile claims.
+4. Titles are provisional until user has enough attempts (recommended: `>= 10 valid picks`).
+
+Title tiers:
+
+```txt
+90–100%: Court Vision Demon
+80–89%: Certified Hooper
+70–79%: Knows Ball
+60–69%: Solid Casual
+50–59%: Agenda Merchant
+Below 50%: Box Score Goblin
+```
+
+Rare call labels (social value, not extra points):
+
+```txt
+Sharp Call: low pick-rate correct call
+Public Call: high pick-rate correct call
+Contrarian Miss: low pick-rate incorrect call
+```
+
+Recommended MVP thresholding:
+
+1. `Sharp Call`: correct pick with global pick rate `<= 25%`.
+2. `Public Call`: correct pick with global pick rate `>= 60%`.
+3. `Contrarian Miss`: incorrect pick with global pick rate `<= 25%`.
+4. Exact thresholds can be tuned after first 2-3 games.
+
+Perfect Card:
+
+```txt
+Award when user is 5/5 on a game with 5 valid races.
+```
+
+## Reputation System (Post-MVP)
+
+Defer these until user base and group behavior justify added complexity:
+
+1. Friend groups and group invites.
+2. Group-only leaderboard.
+3. `Casual of the Night` group label.
+4. Group wins metric.
+5. Top-10% streak tracking.
+6. Series champion badges.
 
 ## Current Finals Setup
 
@@ -312,6 +404,7 @@ Columns:
 * total
 * accuracy
 * games played
+* optional marker badges (Perfect Card, Sharp Call count)
 
 Sorting:
 
@@ -321,6 +414,8 @@ Sorting:
 4. earliest first submission ascending
 
 Friends leaderboard can come later.
+
+For MVP, prioritize global credibility over private friend groups.
 
 ## Admin Role
 
@@ -343,6 +438,7 @@ For MVP, keep this simple.
 Use:
 
 * “Make your calls”
+* “Build your Finals ball-knowledge record”
 * “Who gets there first?”
 * “First To race”
 * “Series accuracy”
@@ -388,5 +484,8 @@ MVP is successful if:
 * lock time works
 * results can be entered
 * leaderboard works
+* user sees a reputation card after finalize
+* rank and low-volume percentile logic work correctly
+* perfect card and title logic are correct
 * user can understand the game in under 10 seconds
 * no subjective stat tracking is required

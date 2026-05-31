@@ -12,7 +12,7 @@ Checklist:
 
 - [ ] Create required app routes and API route skeletons
 - [ ] Create `components/h2h` shell components
-- [ ] Add `lib/h2h` shared modules (`types`, `copy`, `statLabels`, `anonymousUser`, `scoring`)
+- [ ] Add `lib/h2h` shared modules (`types`, `copy`, `statLabels`, `anonymousUser`, `scoring`, `reputation`, `receipts`)
 - [ ] Add Supabase client/server helper modules
 - [ ] Add `.env.example` with all required env vars
 - [ ] Add runtime env guards for missing vars
@@ -38,6 +38,7 @@ Phase 1 gate:
 Reference:
 
 1. `docs/h2h-phase-2-h2h-game-delivery-plan.md`
+2. `docs/h2h-reputation-system.md`
 
 Checklist:
 
@@ -52,6 +53,9 @@ Checklist:
 - [ ] Implement finalize-game scoring write to `h2h_game_results`
 - [ ] Mark game final only after finalize succeeds
 - [ ] Build `/h2h/results` score + breakdown view
+- [ ] Build `/h2h/results` reputation card (series record, rank, title, best receipt, perfect badge)
+- [ ] Implement percentile display threshold logic (`N >= 25`)
+- [ ] Implement provisional title threshold logic (`>= 10 valid picks`)
 - [ ] Build `/h2h/leaderboard` aggregation + sorting
 - [ ] Add required no-betting disclaimer copy
 - [ ] Run copy audit to remove prohibited gambling terms
@@ -63,6 +67,7 @@ Phase 2 gate:
 - [ ] Backend rejects late, malformed, and duplicate submissions
 - [ ] Admin can resolve and finalize game
 - [ ] Results display is correct post-finalize
+- [ ] Reputation metrics display correctly post-finalize
 - [ ] Leaderboard rank order is correct and stable
 - [ ] MVP criteria in `AGENTS.md` are fully satisfied
 
@@ -82,6 +87,17 @@ Checklist:
 - [ ] Verify race outcomes against fixtures
 - [ ] Verify finalized scores against fixtures
 - [ ] Verify leaderboard ordering against fixtures
+- [ ] Verify percentile threshold behavior with small and larger sample sizes
+- [ ] Verify title provisional threshold behavior
+- [ ] Verify perfect-card badge behavior
+
+## Post-MVP Social Layer (Deferred)
+
+- [ ] Group invites and group join flow
+- [ ] Group-only leaderboard route and data model
+- [ ] `Casual of the Night` group label
+- [ ] Group wins metric
+- [ ] Streak metrics beyond MVP
 
 ## Final MVP Release Readiness
 
@@ -92,4 +108,3 @@ Checklist:
 - [ ] Manual admin resolution flow is usable end-to-end
 - [ ] Global leaderboard works across finalized games
 - [ ] UI language stays basketball-native and non-gambling
-
