@@ -10,6 +10,15 @@ Build the HoopMinds H2H MVP at:
 
 The MVP should support one active NBA Finals game with five head-to-head player races, anonymous prediction submission, manual result entry, results calculation, and a global leaderboard.
 
+## Companion Planning Docs
+
+Use these documents together with this build plan:
+
+1. `docs/h2h-phase-1-foundation-scaffolding-plan.md`
+2. `docs/h2h-phase-2-h2h-game-delivery-plan.md`
+3. `docs/h2h-mock-stream-and-test-data-plan.md`
+4. `docs/h2h-execution-checklist.md`
+
 ## Recommended Stack
 
 ```txt
