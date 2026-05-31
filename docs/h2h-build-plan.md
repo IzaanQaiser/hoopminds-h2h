@@ -41,12 +41,25 @@ Low-volume guardrails:
 
 Use these documents together with this build plan:
 
-1. `docs/h2h-phase-1-foundation-scaffolding-plan.md`
-2. `docs/h2h-phase-2-h2h-game-delivery-plan.md`
-3. `docs/h2h-mock-stream-and-test-data-plan.md`
-4. `docs/h2h-execution-checklist.md`
-5. `docs/h2h-reputation-system.md`
-6. `docs/h2h-game-feel-and-live-ux.md`
+1. `AGENTS.md`
+2. `docs/h2h-phase-1-foundation-scaffolding-plan.md`
+3. `docs/h2h-phase-2-h2h-game-delivery-plan.md`
+4. `docs/h2h-mock-stream-and-test-data-plan.md`
+5. `docs/h2h-execution-checklist.md`
+6. `docs/h2h-reputation-system.md`
+7. `docs/h2h-game-feel-and-live-ux.md`
+
+## Single Prompt Reference
+
+If you want to reference one file in prompts, use this file:
+
+```txt
+docs/h2h-build-plan.md
+```
+
+This file points to all canonical product, UX, phase-plan, and execution-checklist docs.
+
+For strict behavior/rules, `AGENTS.md` remains authoritative and should not be ignored.
 
 ## Game Feel Requirement
 

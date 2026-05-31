@@ -21,7 +21,6 @@ Checklist:
 - [ ] Create deterministic Game 1 seed script/data
 - [ ] Scaffold all H2H API endpoints with payload validation shells
 - [ ] Standardize API success/error response structure
-- [ ] Wire placeholder UI states for open/locked/submitted/final
 - [ ] Wire placeholder UI states for open/submitted/live/finalizing/final
 - [ ] Add admin password gate scaffold
 - [ ] Set up lint, typecheck, and baseline tests
